@@ -26,7 +26,7 @@ gulp.task('browser-sync', function() {
 
 gulp.task('styles', function() {
 	return gulp.src('app/'+syntax+'/**/*.'+syntax+'')
-	.pipe(sass({ outputStyle: 'expanded' }).on("error", notify.onError()))
+	.pipe(sass({ outputStyle: 'expand' }).on("error", notify.onError()))
 	.pipe(rename({ suffix: '.min', prefix : '' }))
 	.pipe(autoprefixer(['last 15 versions']))
 	.pipe(cleancss( {level: { 1: { specialComments: 0 } } })) // Opt., comment out when debugging
@@ -37,6 +37,7 @@ gulp.task('styles', function() {
 gulp.task('js', function() {
 	return gulp.src([
 		'app/libs/jquery/dist/jquery.min.js',
+		'app/libs/bxslider/jquery.bxslider.min.js',
 		'app/js/common.js', // Always at the end
 		])
 	.pipe(concat('scripts.min.js'))
@@ -60,8 +61,10 @@ gulp.task('rsync', function() {
 	}))
 });
 
-gulp.task('watch', gulp.series('styles', 'js', 'browser-sync', function() {
+gulp.task('watch', ['styles', 'js', 'browser-sync'], function() {
 	gulp.watch('app/'+syntax+'/**/*.'+syntax+'', ['styles']);
 	gulp.watch(['libs/**/*.js', 'app/js/common.js'], ['js']);
 	gulp.watch('app/*.html', browserSync.reload)
-}));
+});
+
+gulp.task('default', ['watch']);
