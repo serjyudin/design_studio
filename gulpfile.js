@@ -1,4 +1,4 @@
-var syntax        = 'sass'; // Syntax: sass or scss;
+var syntax        = 'scss'; // Syntax: sass or scss;
 
 var gulp          = require('gulp'),
 		gutil         = require('gulp-util' ),
@@ -60,10 +60,8 @@ gulp.task('rsync', function() {
 	}))
 });
 
-gulp.task('watch', ['styles', 'js', 'browser-sync'], function() {
+gulp.task('watch', gulp.series('styles', 'js', 'browser-sync', function() {
 	gulp.watch('app/'+syntax+'/**/*.'+syntax+'', ['styles']);
 	gulp.watch(['libs/**/*.js', 'app/js/common.js'], ['js']);
 	gulp.watch('app/*.html', browserSync.reload)
-});
-
-gulp.task('default', ['watch']);
+}));
